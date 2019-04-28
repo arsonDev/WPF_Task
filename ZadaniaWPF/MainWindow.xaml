@@ -1,0 +1,46 @@
+﻿<Window x:Class="ZadaniaWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ZadaniaWPF"
+        xmlns:vm="clr-namespace:ZadaniaWPF.ViewModel"
+        xmlns:conv="clr-namespace:ZadaniaWPF.Converters"
+        mc:Ignorable="d"
+        Title="ZadaniaWPF" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:TasksVM/>
+    </Window.DataContext>
+    <Window.Resources>
+        <conv:BoolConverter x:Key="BoolConverter"/>
+    </Window.Resources>
+    <Grid>
+        <TextBlock Margin="10,10,0,0" >
+            Liczba zadań:
+            <Run Text="{Binding Path=TasksList.Count, Mode=OneWay}" />
+        </TextBlock>
+        <ListBox x:Name="listBox" ItemsSource="{Binding Path=TasksList}" Margin="10,10,10,10" Height="380" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="772">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="3">
+                            <TextBlock Text="{Binding Path=Desc,Mode=OneWay}" FontSize="20"/>
+                            <Button Content="{Binding Path=DoRealize,Converter={StaticResource BoolConverter}}" Command="{Binding Path=RealizeTask}" IsEnabled="True"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="3">
+                            Termin realizacji:
+                            <Run Text="{Binding Path=MaxTermin,Mode=OneWay,StringFormat={}{0:dd.MM.yyyy},ConverterCulture=pl-PL}"/>
+                            </TextBlock>
+                            <TextBlock Margin="3">
+                            Data utworzenia:
+                            <Run Text="{Binding Path=CreateDate,Mode=OneWay,StringFormat={}{0:dd.MM.yyyy},ConverterCulture=pl-PL}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+    </Grid>
+</Window>

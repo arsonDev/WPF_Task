@@ -1,0 +1,16 @@
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\ZadaniaWPF.exe.config
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\ZadaniaWPF.exe
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\ZadaniaWPF.pdb
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\MainWindow.g.cs
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\App.g.cs
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF_MarkupCompile.cache
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF_MarkupCompile.lref
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\MainWindow.baml
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.g.resources
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.Properties.Resources.resources
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.csproj.GenerateResource.cache
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.csproj.CoreCompileInputs.cache
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.exe
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.pdb
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.csprojAssemblyReference.cache
