@@ -12,34 +12,73 @@
         <vm:TasksVM/>
     </Window.DataContext>
     <Window.Resources>
+        <conv:PriorityConverter x:Key="PrioConverter"/>
+        <conv:PriorityToColor x:Key="PrioToColor"/>
         <conv:BoolConverter x:Key="BoolConverter"/>
+        <conv:BoolToBrushConverter x:Key="BrushConverter"/>
+        <conv:DecorationToConverter x:Key="BoolToDecor"/>
+        <conv:BoolToColor x:Key="BoolToColor"/>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <TextBlock Margin="10,10,0,0" >
             Liczba zadań:
             <Run Text="{Binding Path=TasksList.Count, Mode=OneWay}" />
         </TextBlock>
-        <ListBox x:Name="listBox" ItemsSource="{Binding Path=TasksList}" Margin="10,10,10,10" Height="380" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="772">
+        <ListBox x:Name="listBox" ItemsSource="{Binding Path=TasksList}" Margin="10,29,10,10">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" Margin="3">
-                            <TextBlock Text="{Binding Path=Desc,Mode=OneWay}" FontSize="20"/>
-                            <Button Content="{Binding Path=DoRealize,Converter={StaticResource BoolConverter}}" Command="{Binding Path=RealizeTask}" IsEnabled="True"/>
+                            <TextBlock Text="{Binding Path=Desc,Mode=OneWay}"  
+                                       Foreground="{Binding DoRealize, Converter={StaticResource BrushConverter}}"
+                                       TextDecorations="{Binding DoRealize, Converter={StaticResource BoolToDecor}}"
+                                       FontSize="18"/>
+                            <Button Style="{StaticResource ButtonStyle}" Content="{Binding Path=DoRealize,Converter={StaticResource BoolConverter}}" 
+                                    Command="{Binding Path=RealizeTask}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="3">
                             Termin realizacji:
-                            <Run Text="{Binding Path=MaxTermin,Mode=OneWay,StringFormat={}{0:dd.MM.yyyy},ConverterCulture=pl-PL}"/>
+                            <Run Text="{Binding Path=MaxTermin,Mode=OneWay,StringFormat={}{0:dd.MM.yyyy},ConverterCulture=pl-PL}"
+                                 Foreground="{Binding Path=NotRealizeAfterMaxDate,Mode=OneWay,Converter={StaticResource BoolToColor}}"/>
                             </TextBlock>
                             <TextBlock Margin="3">
                             Data utworzenia:
-                            <Run Text="{Binding Path=CreateDate,Mode=OneWay,StringFormat={}{0:dd.MM.yyyy},ConverterCulture=pl-PL}"/>
+                            <Run Text="{Binding Path=CreateDate,Mode=OneWay,StringFormat={}{0:dd.MM.yyyy},
+                                ConverterCulture=pl-PL}"
+                                 />
+                            </TextBlock>
+                            <TextBlock Margin="3">
+                                Priorytet:
+                                <Run Text="{Binding Path=Priority,Mode=OneWay,
+                                    Converter={StaticResource PrioConverter}}"
+                                     Foreground="{Binding Path=Priority,Mode=OneWay, Converter={StaticResource PrioToColor}}"/>
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Control.Margin" Value="3"/>
+                    <Setter Property="Control.BorderBrush" Value="LightSlateGray"/>
+                    <Setter Property="Control.BorderThickness" Value="1"/>
+                    <Style.Triggers>
+                        <Trigger Property="Control.IsMouseOver" Value="true">
+                            <Setter Property="Control.Background" Value="LightGray"/>
+                        </Trigger>
+
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
 
     </Grid>

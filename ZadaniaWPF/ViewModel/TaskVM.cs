@@ -35,7 +35,7 @@ namespace ZadaniaWPF.ViewModel
         }
         public bool NotRealizeAfterMaxDate
         {
-            get => DoRealize && (DateTime.Now > MaxTermin);
+            get => DoRealize && (DateTime.Now >= MaxTermin);
         }
 
         ICommand realizeTask;
@@ -55,7 +55,7 @@ namespace ZadaniaWPF.ViewModel
                         },
                         predicate =>
                         {
-                            return !model.DoRealize;
+                            return true;//!model.DoRealize;
                         });
                 return realizeTask;
             }

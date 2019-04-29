@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Media;
 using ZadaniaWPF.Model;
 
 namespace ZadaniaWPF.Converters
@@ -40,6 +41,25 @@ namespace ZadaniaWPF.Converters
                 default:
                     throw new Exception("Brak nadanego priorytetu");
             }
+        }
+    }
+
+    class PriorityToColor : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((Priority)value)
+            {
+                case Priority.Krytyczne: return Brushes.Red;
+                case Priority.Ważne: return Brushes.Orange;
+                case Priority.MniejWażne: return Brushes.Green;
+                default: throw new Exception("Brak nadanego priorytetu");
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace ZadaniaWPF.ViewModel
                 allTasks = new AllTasks();
 
             // for tests
-            allTasks.AddTask(new Model.Task("test1", DateTime.Now, DateTime.Now.AddDays(1), Priority.MniejWażne, false));
+            allTasks.AddTask(new Model.Task("test1", DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1), Priority.MniejWażne, false));
             allTasks.AddTask(new Model.Task("test2", DateTime.Now, DateTime.Now.AddDays(9), Priority.Krytyczne, false));
             allTasks.AddTask(new Model.Task("test3", DateTime.Now, DateTime.Now.AddDays(2), Priority.Ważne, true));
             allTasks.AddTask(new Model.Task("test4", DateTime.Now, DateTime.Now.AddDays(3), Priority.MniejWażne, false));
