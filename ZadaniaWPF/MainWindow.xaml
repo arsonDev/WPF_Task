@@ -6,11 +6,18 @@
         xmlns:local="clr-namespace:ZadaniaWPF"
         xmlns:vm="clr-namespace:ZadaniaWPF.ViewModel"
         xmlns:conv="clr-namespace:ZadaniaWPF.Converters"
+        xmlns:inter="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="ZadaniaWPF" Height="450" Width="800">
+        Title="ZadaniaWPF" Height="542" Width="804">
+    <inter:Interaction.Triggers>
+        <inter:EventTrigger EventName="Closed">
+            <inter:InvokeCommandAction Command="{Binding SaveOnClose}"/>
+        </inter:EventTrigger>
+    </inter:Interaction.Triggers>
     <Window.DataContext>
         <vm:TasksVM/>
     </Window.DataContext>
+
     <Window.Resources>
         <conv:PriorityConverter x:Key="PrioConverter"/>
         <conv:PriorityToColor x:Key="PrioToColor"/>
@@ -32,7 +39,7 @@
             Liczba zadań:
             <Run Text="{Binding Path=TasksList.Count, Mode=OneWay}" />
         </TextBlock>
-        <ListBox x:Name="listBox" ItemsSource="{Binding Path=TasksList}" Margin="10,29,10,10">
+        <ListBox x:Name="listBox" ItemsSource="{Binding Path=TasksList}" Margin="10,29,10,0" Height="396" VerticalAlignment="Top">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
@@ -80,6 +87,8 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-
+        <Button Content="Usuń zadanie" RenderTransformOrigin="1,5.556" Margin="10,430,0,63" HorizontalAlignment="Left" Width="90"
+                Command="{Binding Path=DeleteTask}"
+                CommandParameter="{Binding ElementName=listBox,Path=SelectedIndex}"/>
     </Grid>
 </Window>

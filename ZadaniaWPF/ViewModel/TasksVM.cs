@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Windows;
+using System.Windows.Input;
 using ZadaniaWPF.Model;
 
 namespace ZadaniaWPF.ViewModel
@@ -12,6 +14,81 @@ namespace ZadaniaWPF.ViewModel
 
         private AllTasks allTasks;
         public ObservableCollection<TaskVM> TasksList { get; } = new ObservableCollection<TaskVM>();
+
+        public ICommand save;
+
+        public ICommand SaveOnClose
+        {
+            get
+            {
+                if (save == null)
+                    save = new RelayCommand(
+                        action =>
+                        {
+                            Model.xmlFile.Save(xmlPath, allTasks);
+                        },
+                        predicate =>
+                        { return true; });
+                return save;
+            }
+        }
+
+
+        public ICommand delete;
+
+        public ICommand DeleteTask
+        {
+            get
+            {
+                if (delete != null)
+                {
+                    delete = new RelayCommand(
+                        action =>
+                        {
+                            int index = (int)action;
+                            TaskVM task = TasksList[index];
+                            if (!task.DoRealize)
+                            {
+                                MessageBoxResult mbr = MessageBox.Show("Czy chcesz usunąć niezrealizowane zadanie?", "ZadaniaWPF",
+                                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+                                if (mbr == MessageBoxResult.No) return;
+                            }
+                            TasksList.Remove(task);
+                        },
+                        pred =>
+                        {
+                            if (pred == null) return false;
+                            int index = (int)pred;
+                            return index >= 0;
+                        });
+
+                }
+                return delete;
+            }
+        }
+
+        public ICommand add;
+
+        public ICommand C_AddTask
+        {
+            get
+            {
+                if (add != null)
+                {
+                    add = new RelayCommand(action =>
+                    {
+                        TaskVM task = action as TaskVM;
+                        if (task != null)
+                            TasksList.Add(task);
+                    },
+                    pred =>
+                    {
+                        return (pred as TaskVM) != null;
+                    });
+                }
+                return add;
+            }
+        }
 
         #endregion
 
@@ -65,6 +142,8 @@ namespace ZadaniaWPF.ViewModel
                     }
             }
         }
+
+
 
         #endregion
     }

@@ -14,3 +14,12 @@ C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.csproj.CoreCompil
 C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.exe
 C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.pdb
 C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.csprojAssemblyReference.cache
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\Microsoft.Expression.Interactions.dll
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\Microsoft.Windows.Design.Interaction.dll
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\Microsoft.Windows.Design.Extensibility.dll
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\Microsoft.Expression.Interactions.xml
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\System.Windows.Interactivity.xml
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\pl\Microsoft.Windows.Design.Interaction.resources.dll
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\bin\Debug\pl\Microsoft.Windows.Design.Extensibility.resources.dll
+C:\Users\arekk\Devs\ZadaniaWPF\ZadaniaWPF\obj\Debug\ZadaniaWPF.csproj.CopyComplete
