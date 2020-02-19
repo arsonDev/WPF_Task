@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TasksWpfModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DictTaskEventType">
+          <Key>
+            <PropertyRef Name="tev_id" />
+          </Key>
+          <Property Name="tev_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tev_name" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="tev_createDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TaskPriority">
+          <Key>
+            <PropertyRef Name="tsp_id" />
+          </Key>
+          <Property Name="tsp_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tsp_name" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="tsp_createDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Tasks">
+          <Key>
+            <PropertyRef Name="tsk_id" />
+          </Key>
+          <Property Name="tsk_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tsk_name" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="tsk_priority" Type="int" Nullable="false" />
+          <Property Name="tsk_maxDate" Type="datetime" Nullable="false" />
+          <Property Name="tsk_CreateDate" Type="datetime" />
+          <Property Name="tsk_isRealized" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TasksHistory">
+          <Key>
+            <PropertyRef Name="tsh_id" />
+          </Key>
+          <Property Name="tsh_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tsh_TaskId" Type="int" Nullable="false" />
+          <Property Name="tsh_EventDate" Type="datetime" />
+          <Property Name="tsh_EventType" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Tasks_TaskPriority">
+          <End Role="TaskPriority" Type="Self.TaskPriority" Multiplicity="1" />
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaskPriority">
+              <PropertyRef Name="tsp_id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="tsk_priority" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TasksHistory_DictTaskEventType">
+          <End Role="DictTaskEventType" Type="Self.DictTaskEventType" Multiplicity="1" />
+          <End Role="TasksHistory" Type="Self.TasksHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DictTaskEventType">
+              <PropertyRef Name="tev_id" />
+            </Principal>
+            <Dependent Role="TasksHistory">
+              <PropertyRef Name="tsh_EventType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TasksHistory_Tasks">
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+          <End Role="TasksHistory" Type="Self.TasksHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="tsk_id" />
+            </Principal>
+            <Dependent Role="TasksHistory">
+              <PropertyRef Name="tsh_TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="TaskDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="TaskHistoryCreate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="taskId" Type="int" Mode="In" />
+          <Parameter Name="eventType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="TaskList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="TaskSave" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="name" Type="varchar(max)" Mode="In" />
+          <Parameter Name="priority" Type="int" Mode="In" />
+          <Parameter Name="maxDate" Type="datetime" Mode="In" />
+          <Parameter Name="realized" Type="bit" Mode="In" />
+        </Function>
+        <EntityContainer Name="TasksWpfModelStoreContainer">
+          <EntitySet Name="DictTaskEventType" EntityType="Self.DictTaskEventType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaskPriority" EntityType="Self.TaskPriority" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TasksHistory" EntityType="Self.TasksHistory" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Tasks_TaskPriority" Association="Self.FK_Tasks_TaskPriority">
+            <End Role="TaskPriority" EntitySet="TaskPriority" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TasksHistory_DictTaskEventType" Association="Self.FK_TasksHistory_DictTaskEventType">
+            <End Role="DictTaskEventType" EntitySet="DictTaskEventType" />
+            <End Role="TasksHistory" EntitySet="TasksHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TasksHistory_Tasks" Association="Self.FK_TasksHistory_Tasks">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="TasksHistory" EntitySet="TasksHistory" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TasksWpfModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DictTaskEventType">
+          <Key>
+            <PropertyRef Name="tev_id" />
+          </Key>
+          <Property Name="tev_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tev_name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tev_createDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="TasksHistories" Relationship="Self.FK_TasksHistory_DictTaskEventType" FromRole="DictTaskEventType" ToRole="TasksHistory" />
+        </EntityType>
+        <EntityType Name="TaskPriority">
+          <Key>
+            <PropertyRef Name="tsp_id" />
+          </Key>
+          <Property Name="tsp_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tsp_name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tsp_createDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Tasks" Relationship="Self.FK_Tasks_TaskPriority" FromRole="TaskPriority" ToRole="Tasks" />
+        </EntityType>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="tsk_id" />
+          </Key>
+          <Property Name="tsk_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tsk_name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tsk_priority" Type="Int32" Nullable="false" />
+          <Property Name="tsk_maxDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="tsk_CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="tsk_isRealized" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TaskPriority" Relationship="Self.FK_Tasks_TaskPriority" FromRole="Tasks" ToRole="TaskPriority" />
+          <NavigationProperty Name="TasksHistories" Relationship="Self.FK_TasksHistory_Tasks" FromRole="Tasks" ToRole="TasksHistory" />
+        </EntityType>
+        <EntityType Name="TasksHistory">
+          <Key>
+            <PropertyRef Name="tsh_id" />
+          </Key>
+          <Property Name="tsh_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tsh_TaskId" Type="Int32" Nullable="false" />
+          <Property Name="tsh_EventDate" Type="DateTime" Precision="3" />
+          <Property Name="tsh_EventType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DictTaskEventType" Relationship="Self.FK_TasksHistory_DictTaskEventType" FromRole="TasksHistory" ToRole="DictTaskEventType" />
+          <NavigationProperty Name="Task" Relationship="Self.FK_TasksHistory_Tasks" FromRole="TasksHistory" ToRole="Tasks" />
+        </EntityType>
+        <Association Name="FK_TasksHistory_DictTaskEventType">
+          <End Role="DictTaskEventType" Type="Self.DictTaskEventType" Multiplicity="1" />
+          <End Role="TasksHistory" Type="Self.TasksHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DictTaskEventType">
+              <PropertyRef Name="tev_id" />
+            </Principal>
+            <Dependent Role="TasksHistory">
+              <PropertyRef Name="tsh_EventType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_TaskPriority">
+          <End Role="TaskPriority" Type="Self.TaskPriority" Multiplicity="1" />
+          <End Role="Tasks" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaskPriority">
+              <PropertyRef Name="tsp_id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="tsk_priority" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TasksHistory_Tasks">
+          <End Role="Tasks" Type="Self.Task" Multiplicity="1" />
+          <End Role="TasksHistory" Type="Self.TasksHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="tsk_id" />
+            </Principal>
+            <Dependent Role="TasksHistory">
+              <PropertyRef Name="tsh_TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TasksWpfEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DictTaskEventTypes" EntityType="Self.DictTaskEventType" />
+          <EntitySet Name="TaskPriorities" EntityType="Self.TaskPriority" />
+          <EntitySet Name="Tasks" EntityType="Self.Task" />
+          <EntitySet Name="TasksHistories" EntityType="Self.TasksHistory" />
+          <AssociationSet Name="FK_TasksHistory_DictTaskEventType" Association="Self.FK_TasksHistory_DictTaskEventType">
+            <End Role="DictTaskEventType" EntitySet="DictTaskEventTypes" />
+            <End Role="TasksHistory" EntitySet="TasksHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_TaskPriority" Association="Self.FK_Tasks_TaskPriority">
+            <End Role="TaskPriority" EntitySet="TaskPriorities" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TasksHistory_Tasks" Association="Self.FK_TasksHistory_Tasks">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="TasksHistory" EntitySet="TasksHistories" />
+          </AssociationSet>
+          <FunctionImport Name="TaskDelete">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="TaskHistoryCreate">
+            <Parameter Name="taskId" Mode="In" Type="Int32" />
+            <Parameter Name="eventType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="TaskList" ReturnType="Collection(TasksWpfModel.TaskList_Result)" />
+          <FunctionImport Name="TaskSave" ReturnType="Collection(Decimal)">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="name" Mode="In" Type="String" />
+            <Parameter Name="priority" Mode="In" Type="Int32" />
+            <Parameter Name="maxDate" Mode="In" Type="DateTime" />
+            <Parameter Name="realized" Mode="In" Type="Boolean" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="TaskList_Result">
+          <Property Type="Int32" Name="tsk_id" Nullable="false" />
+          <Property Type="String" Name="tsk_name" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="tsk_priority" Nullable="false" />
+          <Property Type="DateTime" Name="tsk_maxDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="tsk_CreateDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="tsk_isRealized" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TasksWpfModelStoreContainer" CdmEntityContainer="TasksWpfEntities1">
+          <EntitySetMapping Name="DictTaskEventTypes">
+            <EntityTypeMapping TypeName="TasksWpfModel.DictTaskEventType">
+              <MappingFragment StoreEntitySet="DictTaskEventType">
+                <ScalarProperty Name="tev_id" ColumnName="tev_id" />
+                <ScalarProperty Name="tev_name" ColumnName="tev_name" />
+                <ScalarProperty Name="tev_createDate" ColumnName="tev_createDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskPriorities">
+            <EntityTypeMapping TypeName="TasksWpfModel.TaskPriority">
+              <MappingFragment StoreEntitySet="TaskPriority">
+                <ScalarProperty Name="tsp_id" ColumnName="tsp_id" />
+                <ScalarProperty Name="tsp_name" ColumnName="tsp_name" />
+                <ScalarProperty Name="tsp_createDate" ColumnName="tsp_createDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tasks">
+            <EntityTypeMapping TypeName="TasksWpfModel.Task">
+              <MappingFragment StoreEntitySet="Tasks">
+                <ScalarProperty Name="tsk_id" ColumnName="tsk_id" />
+                <ScalarProperty Name="tsk_name" ColumnName="tsk_name" />
+                <ScalarProperty Name="tsk_priority" ColumnName="tsk_priority" />
+                <ScalarProperty Name="tsk_maxDate" ColumnName="tsk_maxDate" />
+                <ScalarProperty Name="tsk_CreateDate" ColumnName="tsk_CreateDate" />
+                <ScalarProperty Name="tsk_isRealized" ColumnName="tsk_isRealized" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TasksHistories">
+            <EntityTypeMapping TypeName="TasksWpfModel.TasksHistory">
+              <MappingFragment StoreEntitySet="TasksHistory">
+                <ScalarProperty Name="tsh_id" ColumnName="tsh_id" />
+                <ScalarProperty Name="tsh_TaskId" ColumnName="tsh_TaskId" />
+                <ScalarProperty Name="tsh_EventDate" ColumnName="tsh_EventDate" />
+                <ScalarProperty Name="tsh_EventType" ColumnName="tsh_EventType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="TaskDelete" FunctionName="TasksWpfModel.Store.TaskDelete" />
+          <FunctionImportMapping FunctionImportName="TaskHistoryCreate" FunctionName="TasksWpfModel.Store.TaskHistoryCreate" />
+          <FunctionImportMapping FunctionImportName="TaskList" FunctionName="TasksWpfModel.Store.TaskList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TasksWpfModel.TaskList_Result">
+                <ScalarProperty Name="tsk_id" ColumnName="tsk_id" />
+                <ScalarProperty Name="tsk_name" ColumnName="tsk_name" />
+                <ScalarProperty Name="tsk_priority" ColumnName="tsk_priority" />
+                <ScalarProperty Name="tsk_maxDate" ColumnName="tsk_maxDate" />
+                <ScalarProperty Name="tsk_CreateDate" ColumnName="tsk_CreateDate" />
+                <ScalarProperty Name="tsk_isRealized" ColumnName="tsk_isRealized" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="TaskSave" FunctionName="TasksWpfModel.Store.TaskSave" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

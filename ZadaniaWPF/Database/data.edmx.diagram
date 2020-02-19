@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="495772cf0709472f9b0b1f371f823e0b" Name="Diagram1">
+        <EntityTypeShape EntityType="TasksWpfModel.DictTaskEventType" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TasksWpfModel.TaskPriority" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TasksWpfModel.Task" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="TasksWpfModel.TasksHistory" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="TasksWpfModel.FK_TasksHistory_DictTaskEventType" ManuallyRouted="false" />
+        <AssociationConnector Association="TasksWpfModel.FK_Tasks_TaskPriority" ManuallyRouted="false" />
+        <AssociationConnector Association="TasksWpfModel.FK_TasksHistory_Tasks" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

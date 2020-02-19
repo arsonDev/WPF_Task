@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
+
 using ZadaniaWPF.Model;
 
 namespace ZadaniaWPF.Converters
 {
-    class PriorityConverter : IValueConverter
+    public class PriorityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -44,7 +41,7 @@ namespace ZadaniaWPF.Converters
         }
     }
 
-    class PriorityToColor : IValueConverter
+    public class PriorityToColor : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -60,6 +57,21 @@ namespace ZadaniaWPF.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class PriorityToString : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Model.Priority priorityTask = (Model.Priority)value;
+            return Model.Task.PriorityDescription(priorityTask);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string opisPriorytetu = (value as string).ToLower();
+            return Model.Task.DescPriorityParser(opisPriorytetu);
         }
     }
 }

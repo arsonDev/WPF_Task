@@ -26,8 +26,5 @@ namespace ZadaniaWPF.Model
         {
             get => listTasks[index];
         }
-
-        
-
     }
 }

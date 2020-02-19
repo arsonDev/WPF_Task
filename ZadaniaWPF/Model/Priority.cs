@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ZadaniaWPF.Model
+﻿namespace ZadaniaWPF.Model
 {
     public enum Priority
     {
-        MniejWażne,
-        Ważne,
-        Krytyczne
+        MniejWażne = 1,
+        Ważne = 2,
+        Krytyczne = 3
     }
-
 }

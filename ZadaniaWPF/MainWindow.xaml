@@ -7,13 +7,9 @@
         xmlns:vm="clr-namespace:ZadaniaWPF.ViewModel"
         xmlns:conv="clr-namespace:ZadaniaWPF.Converters"
         xmlns:inter="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="ZadaniaWPF" Height="542" Width="804">
-    <inter:Interaction.Triggers>
-        <inter:EventTrigger EventName="Closed">
-            <inter:InvokeCommandAction Command="{Binding SaveOnClose}"/>
-        </inter:EventTrigger>
-    </inter:Interaction.Triggers>
+        Title="ZadaniaWPF" Height="600" Width="804">
     <Window.DataContext>
         <vm:TasksVM/>
     </Window.DataContext>
@@ -25,6 +21,7 @@
         <conv:BoolToBrushConverter x:Key="BrushConverter"/>
         <conv:DecorationToConverter x:Key="BoolToDecor"/>
         <conv:BoolToColor x:Key="BoolToColor"/>
+        <conv:TaskConverter x:Key="TaskConverter"/>
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="FontSize" Value="10"/>
             <Setter Property="Margin" Value="5"/>
@@ -33,13 +30,38 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <Style x:Key="stylPrzycisku" TargetType="Button">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Width" Value="85" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style TargetType="{x:Type DatePickerTextBox}">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <TextBox Text="{Binding Path=SelectedDate, StringFormat={}{0:dd MMMM yyyy}, ConverterCulture=pl-PL,
+								 RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
-        <TextBlock Margin="10,10,0,0" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="355*"/>
+            <RowDefinition Height="214*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Liczba zadań: " Height="16" Width="73">
+            <Run Text="{Binding Path=ListaZadań.Count, Mode=OneWay}" />
+        </TextBlock>
+        <TextBlock Margin="10,10,0,0" Grid.RowSpan="2" >
             Liczba zadań:
             <Run Text="{Binding Path=TasksList.Count, Mode=OneWay}" />
         </TextBlock>
-        <ListBox x:Name="listBox" ItemsSource="{Binding Path=TasksList}" Margin="10,29,10,0" Height="396" VerticalAlignment="Top">
+        <ListBox x:Name="listBox" ItemsSource="{Binding Path=TasksList}" Margin="10,29,10,0" Height="316" VerticalAlignment="Top">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
@@ -48,8 +70,9 @@
                                        Foreground="{Binding DoRealize, Converter={StaticResource BrushConverter}}"
                                        TextDecorations="{Binding DoRealize, Converter={StaticResource BoolToDecor}}"
                                        FontSize="18"/>
-                            <Button Style="{StaticResource ButtonStyle}" Content="{Binding Path=DoRealize,Converter={StaticResource BoolConverter}}" 
-                                    Command="{Binding Path=RealizeTask}"/>
+                            <Button Content="{Binding Path=DoRealize,Converter={StaticResource BoolConverter}}" 
+                                    Command="{Binding Path=RealizeTask}" Margin="10,2,2,2"
+                                   Style="{StaticResource stylPrzycisku}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="3">
@@ -87,8 +110,52 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-        <Button Content="Usuń zadanie" RenderTransformOrigin="1,5.556" Margin="10,430,0,63" HorizontalAlignment="Left" Width="90"
+        <Button Content="Usuń zadanie" 
+				HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+				Margin="10,0,0,165" Width="100" Height="25" 
+				Style="{StaticResource stylPrzycisku}" 
                 Command="{Binding Path=DeleteTask}"
-                CommandParameter="{Binding ElementName=listBox,Path=SelectedIndex}"/>
+                Grid.Row="1" 
+                CommandParameter="{Binding ElementName=listBox, Path=SelectedIndex}"/>
+        <GroupBox Header="Nowe zadanie" Margin="10,0,10,10" MinWidth="420" Height="140" VerticalAlignment="Bottom" Grid.Row="1">
+            <Grid>
+                <Label Content="Opis:" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox x:Name="tbOpis" Height="23" Margin="10,30,10,0" VerticalAlignment="Top" />
+                <Label Content="Priorytet:" Margin="10,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox x:Name="cbPriorytet" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="120">
+                    <ComboBoxItem>Mniej ważne</ComboBoxItem>
+                    <ComboBoxItem IsSelected="True">Ważne</ComboBoxItem>
+                    <ComboBoxItem>Krytyczne</ComboBoxItem>
+                </ComboBox>
+                <Label Content="Termin realizacji:" Margin="160,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <DatePicker x:Name="dpTerminRealizacji" Margin="160,85,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                </DatePicker>
+
+                <local:NotificationDialogBox x:Name="notificationDialogBox" 
+											 Caption="ZadaniaWPF" CommandBefore="{Binding Path=DodajZadanie}">
+                    <local:NotificationDialogBox.CommandParameter>
+                        <MultiBinding Converter="{StaticResource TaskConverter}">
+                            <Binding ElementName="tbOpis" Path="Text" />
+                            <Binding ElementName="dpTerminRealizacji" Path="SelectedDate" />
+                            <Binding ElementName="cbPriorytet" Path="Text" />
+                        </MultiBinding>
+                    </local:NotificationDialogBox.CommandParameter>
+                </local:NotificationDialogBox>
+                <Button Content="Zapisz zadanie" 
+						Margin="0,83,9.8,0" HorizontalAlignment="Right" VerticalAlignment="Top" 
+						Width="100" Height="25" 
+                        IsEnabled="True"
+						Style="{StaticResource stylPrzycisku}" 
+                        Command="{Binding AddTask}">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource TaskConverter}">
+                            <Binding ElementName="tbOpis" Path="Text" />
+                            <Binding ElementName="dpTerminRealizacji" Path="SelectedDate" />
+                            <Binding ElementName="cbPriorytet" Path="Text" />
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Windows.Input;
+
 using ZadaniaWPF.Model;
 
 namespace ZadaniaWPF.ViewModel
@@ -13,6 +10,11 @@ namespace ZadaniaWPF.ViewModel
     {
         #region props_var
         private Task model;
+
+        public int Id
+        {
+            get => model.Id;
+        }
         public string Desc
         {
             get => model.Desc;
@@ -35,10 +37,12 @@ namespace ZadaniaWPF.ViewModel
         }
         public bool NotRealizeAfterMaxDate
         {
-            get => DoRealize && (DateTime.Now >= MaxTermin);
+            get => !DoRealize && (DateTime.Now >= MaxTermin);
         }
 
-        ICommand realizeTask;
+        private ICommand add;
+
+        private ICommand realizeTask;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -52,12 +56,63 @@ namespace ZadaniaWPF.ViewModel
                         {
                             model.DoRealize = !model.DoRealize;
                             OnPropertyChanged("realize", "NotRealizeAfterMaxDate");
+                            EditInDB(model);
                         },
                         predicate =>
                         {
-                            return true;//!model.DoRealize;
+                            return !model.DoRealize;
                         });
                 return realizeTask;
+            }
+        }
+
+        private void EditInDB(Task model)
+        {
+            using (Database.TasksWpfEntities1 db = new Database.TasksWpfEntities1())
+            {
+                var task = db.Tasks.Find(model.Id);
+                task.tsk_isRealized = model.DoRealize;
+
+                db.SaveChanges();
+            }
+        }
+
+        public ICommand AddTask
+        {
+            get
+            {
+                if (add != null)
+                {
+                    add = new RelayCommand(
+                        action =>
+                        {
+                            TaskVM task = action as TaskVM;
+                            if (task != null)
+                            {
+                                SaveInDb(task);
+                            }
+                        },
+                        pred =>
+                        {
+                            return (pred as TaskVM) != null;
+                        });
+                }
+                return add;
+            }
+        }
+
+        private void SaveInDb(TaskVM task)
+        {
+            using (Database.TasksWpfEntities1 db = new Database.TasksWpfEntities1())
+            {
+                db.Tasks.Add(new Database.Task()
+                {
+                    tsk_name = task.Desc,
+                    tsk_priority = (int)task.Priority,
+                    tsk_maxDate = task.MaxTermin,
+                    tsk_isRealized = task.DoRealize
+                });
+                db.SaveChanges();
             }
         }
 
@@ -68,11 +123,12 @@ namespace ZadaniaWPF.ViewModel
         {
             this.model = model;
         }
-        public TaskVM(string desc, DateTime createDate, DateTime maxDate, Priority priority, bool doRealize)
-        {
-            model = new Task(desc, createDate, maxDate, priority, doRealize);
-        }
 
+        public TaskVM(int id, string desc, DateTime createDate, DateTime maxDate, Priority priority, bool doRealize)
+        {
+            model = new Task(id, desc, createDate, maxDate, priority, doRealize);
+            
+        }
 
         #endregion
 
