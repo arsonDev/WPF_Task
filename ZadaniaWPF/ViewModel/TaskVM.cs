@@ -40,7 +40,6 @@ namespace ZadaniaWPF.ViewModel
             get => !DoRealize && (DateTime.Now >= MaxTermin);
         }
 
-        private ICommand add;
 
         private ICommand realizeTask;
 
@@ -55,7 +54,7 @@ namespace ZadaniaWPF.ViewModel
                         action =>
                         {
                             model.DoRealize = !model.DoRealize;
-                            OnPropertyChanged("realize", "NotRealizeAfterMaxDate");
+                            OnPropertyChanged("DoRealize", "NotRealizeAfterMaxDate");
                             EditInDB(model);
                         },
                         predicate =>
@@ -73,34 +72,19 @@ namespace ZadaniaWPF.ViewModel
                 var task = db.Tasks.Find(model.Id);
                 task.tsk_isRealized = model.DoRealize;
 
+                db.TasksHistories.Add(
+                    new Database.TasksHistory()
+                    {
+                        tsh_EventDate = DateTime.Now,
+                        tsh_TaskId = task.tsk_id,
+                        tsh_EventType = db.DictTaskEventTypes
+                            .Find(task.tsk_isRealized ? 2 : 1)
+                            .tev_id
+                    });
+
                 db.SaveChanges();
             }
         }
-
-        public ICommand AddTask
-        {
-            get
-            {
-                if (add != null)
-                {
-                    add = new RelayCommand(
-                        action =>
-                        {
-                            TaskVM task = action as TaskVM;
-                            if (task != null)
-                            {
-                                SaveInDb(task);
-                            }
-                        },
-                        pred =>
-                        {
-                            return (pred as TaskVM) != null;
-                        });
-                }
-                return add;
-            }
-        }
-
         private void SaveInDb(TaskVM task)
         {
             using (Database.TasksWpfEntities1 db = new Database.TasksWpfEntities1())

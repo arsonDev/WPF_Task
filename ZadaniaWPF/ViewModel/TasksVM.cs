@@ -63,6 +63,7 @@ namespace ZadaniaWPF.ViewModel
                             if (task != null)
                             {
                                 SaveInDb(task);
+                                LoadTasks();
                             }
                         },
                         pred =>
@@ -79,7 +80,7 @@ namespace ZadaniaWPF.ViewModel
         #region construct
         public TasksVM()
         {
-            
+            LoadTasks();
         }
         #endregion
 
